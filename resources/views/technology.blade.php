@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Space Tourism - Technology')
+@section('title', __('technology.title'))
 
 @section('background')
     <!-- Background responsive -->
@@ -29,7 +29,7 @@
 
         <!-- Page Title -->
         <h2 class="text-white text-base md:text-xl lg:text-2xl tracking-widest uppercase font-barlow text-center md:text-left">
-            <span class="text-white/25 font-bold mr-4">03</span>Space launch 101
+            <span class="text-white/25 font-bold mr-4">{{ __('technology.page_number') }}</span>{{ __('technology.page_title') }}
         </h2>
 
         <!-- Main Content Grid -->
@@ -55,7 +55,7 @@
                 <div class="space-y-4 md:space-y-6 text-center lg:text-left">
                     <!-- Label -->
                     <h3 class="text-[#D0D6F9] text-sm md:text-base tracking-widest uppercase font-barlow">
-                        The terminology...
+                        {{ __('technology.terminology') }}
                     </h3>
 
                     <!-- Name -->
@@ -95,5 +95,11 @@
 @endsection
 
 @section('scripts')
+    <script>
+        // Injecter les traductions dans JavaScript
+        window.translations = {
+            technologies: @json(__('technology.technologies'))
+        };
+    </script>
     @vite(['resources/js/technology.js'])
 @endsection

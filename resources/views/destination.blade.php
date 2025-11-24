@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Space Tourism - Destination')
+@section('title', __('destination.title'))
 
 @section('background')
     <!-- Background responsive -->
@@ -29,7 +29,7 @@
 
         <!-- Page Title -->
         <h2 class="text-white text-base md:text-xl lg:text-2xl tracking-widest uppercase font-barlow text-center md:text-left">
-            <span class="text-white/25 font-bold mr-4">01</span>Pick your destination
+            <span class="text-white/25 font-bold mr-4">{{ __('destination.page_number') }}</span>{{ __('destination.page_title') }}
         </h2>
 
         <!-- Main Content Grid -->
@@ -125,5 +125,13 @@
 @endsection
 
 @section('scripts')
+    <script>
+        // Injecter les traductions dans JavaScript
+        window.translations = {
+            destinations: @json(__('destination.destinations')),
+            avgDistance: @json(__('destination.avg_distance')),
+            travelTime: @json(__('destination.travel_time'))
+        };
+    </script>
     @vite(['resources/js/destination.js'])
 @endsection

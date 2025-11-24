@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Space Tourism - Crew')
+@section('title', __('crew.title'))
 
 @section('background')
     <!-- Background responsive -->
@@ -29,7 +29,7 @@
 
         <!-- Page Title -->
         <h2 class="text-white text-base md:text-xl lg:text-2xl tracking-widest uppercase font-barlow text-center md:text-left">
-            <span class="text-white/25 font-bold mr-4">02</span>Meet your crew
+            <span class="text-white/25 font-bold mr-4">{{ __('crew.page_number') }}</span>{{ __('crew.page_title') }}
         </h2>
 
         <!-- Main Content Grid -->
@@ -79,5 +79,11 @@
 @endsection
 
 @section('scripts')
+    <script>
+        // Injecter les traductions dans JavaScript
+        window.translations = {
+            crewMembers: @json(__('crew.crew_members'))
+        };
+    </script>
     @vite(['resources/js/crew.js'])
 @endsection
