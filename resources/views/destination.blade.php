@@ -38,8 +38,8 @@
             <!-- Left Section - Planet Image -->
             <div class="flex justify-center items-center">
                 <img id="planet-image"
-                     src="{{ asset('assets/destination/image-moon.png') }}"
-                     alt="Moon"
+                     src="{{ asset($planets->first()->image) }}"
+                     alt="{{ $planets->first()->getName() }}"
                      class="w-44 h-44 md:w-72 md:h-72 lg:w-96 lg:h-96 animate-spin-slow">
             </div>
 
@@ -48,30 +48,21 @@
 
                 <!-- Tabs Navigation -->
                 <nav class="flex gap-6 md:gap-8 justify-center lg:justify-start">
-                    <button data-destination="moon" class="text-white text-sm md:text-base tracking-widest uppercase font-barlow pb-2 border-b-2 border-white transition">
-                        Moon
-                    </button>
-                    <button data-destination="mars" class="text-[#D0D6F9] text-sm md:text-base tracking-widest uppercase font-barlow pb-2 border-b-2 border-transparent hover:border-white/50 transition">
-                        Mars
-                    </button>
-                    <button data-destination="europa" class="text-[#D0D6F9] text-sm md:text-base tracking-widest uppercase font-barlow pb-2 border-b-2 border-transparent hover:border-white/50 transition">
-                        Europa
-                    </button>
-                    <button data-destination="titan" class="text-[#D0D6F9] text-sm md:text-base tracking-widest uppercase font-barlow pb-2 border-b-2 border-transparent hover:border-white/50 transition">
-                        Titan
-                    </button>
+                    @foreach($planets as $index => $planet)
+                        <button data-destination="{{ $planet->id }}" class="{{ $index === 0 ? 'text-white border-white' : 'text-[#D0D6F9] border-transparent hover:border-white/50' }} text-sm md:text-base tracking-widest uppercase font-barlow pb-2 border-b-2 transition">
+                            {{ $planet->getName() }}
+                        </button>
+                    @endforeach
                 </nav>
 
                 <!-- Destination Name -->
                 <h1 id="planet-name" class="text-white text-5xl md:text-7xl lg:text-8xl uppercase font-bellefair text-center lg:text-left">
-                    Moon
+                    {{ $planets->first()->getName() }}
                 </h1>
 
                 <!-- Destination Description -->
                 <p id="planet-description" class="text-[#D0D6F9] text-base md:text-lg leading-relaxed font-barlow text-center lg:text-left">
-                    See our planet as you've never seen it before. A perfect relaxing trip away to help
-                    regain perspective and come back refreshed. While you're there, take in some history
-                    by visiting the Luna 2 and Apollo 11 landing sites.
+                    {{ $planets->first()->getDescription() }}
                 </p>
 
                 <!-- Separator Line -->
@@ -82,20 +73,20 @@
                     <!-- Average Distance -->
                     <div>
                         <h3 class="text-[#D0D6F9] text-xs md:text-sm tracking-widest uppercase font-barlow mb-2">
-                            Avg. Distance
+                            {{ __('destination.avg_distance') }}
                         </h3>
                         <p id="planet-distance" class="text-white text-2xl md:text-3xl uppercase font-bellefair">
-                            384,400 km
+                            {{ $planets->first()->getDistance() }}
                         </p>
                     </div>
 
                     <!-- Travel Time -->
                     <div>
                         <h3 class="text-[#D0D6F9] text-xs md:text-sm tracking-widest uppercase font-barlow mb-2">
-                            Est. travel time
+                            {{ __('destination.travel_time') }}
                         </h3>
                         <p id="planet-travel" class="text-white text-2xl md:text-3xl uppercase font-bellefair">
-                            3 days
+                            {{ $planets->first()->getTravel() }}
                         </p>
                     </div>
                 </div>
@@ -126,6 +117,9 @@
 
 @section('scripts')
     <script>
+        // Injecter les données des planètes dans JavaScript
+        window.planetsData = @json($planets->keyBy('id'));
+
         // Injecter les traductions dans JavaScript
         window.translations = {
             destinations: @json(__('destination.destinations')),
