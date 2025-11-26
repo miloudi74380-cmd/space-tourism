@@ -24,6 +24,10 @@ class RoleSeeder extends Seeder
             'crew.create',
             'crew.edit',
             'crew.delete',
+            'technologies.view',
+            'technologies.create',
+            'technologies.edit',
+            'technologies.delete',
         ];
 
         foreach ($permissions as $permission) {

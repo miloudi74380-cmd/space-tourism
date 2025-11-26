@@ -1,0 +1,90 @@
+<x-admin-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Ajouter une technologie
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <form action="{{ route('admin.technologies.store') }}" method="POST" class="space-y-6">
+                        @csrf
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name_fr" class="block text-sm font-medium text-gray-700">Nom (Français)</label>
+                                <input type="text" name="name_fr" id="name_fr" value="{{ old('name_fr') }}" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('name_fr') border-red-500 @enderror">
+                                @error('name_fr')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="name_en" class="block text-sm font-medium text-gray-700">Nom (Anglais)</label>
+                                <input type="text" name="name_en" id="name_en" value="{{ old('name_en') }}" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('name_en') border-red-500 @enderror">
+                                @error('name_en')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="image_landscape" class="block text-sm font-medium text-gray-700">Image Paysage (chemin)</label>
+                                <input type="text" name="image_landscape" id="image_landscape" value="{{ old('image_landscape') }}" required
+                                    placeholder="/assets/technology/image-nom-landscape.jpg"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('image_landscape') border-red-500 @enderror">
+                                @error('image_landscape')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="image_portrait" class="block text-sm font-medium text-gray-700">Image Portrait (chemin)</label>
+                                <input type="text" name="image_portrait" id="image_portrait" value="{{ old('image_portrait') }}" required
+                                    placeholder="/assets/technology/image-nom-portrait.jpg"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('image_portrait') border-red-500 @enderror">
+                                @error('image_portrait')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="description_fr" class="block text-sm font-medium text-gray-700">Description (Français)</label>
+                                <textarea name="description_fr" id="description_fr" rows="6" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('description_fr') border-red-500 @enderror">{{ old('description_fr') }}</textarea>
+                                @error('description_fr')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="description_en" class="block text-sm font-medium text-gray-700">Description (Anglais)</label>
+                                <textarea name="description_en" id="description_en" rows="6" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('description_en') border-red-500 @enderror">{{ old('description_en') }}</textarea>
+                                @error('description_en')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end space-x-4">
+                            <a href="{{ route('admin.technologies.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Annuler
+                            </a>
+                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Créer la technologie
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-admin-layout>

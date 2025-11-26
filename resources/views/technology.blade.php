@@ -40,15 +40,11 @@
 
                 <!-- Number Navigation (horizontal on mobile, vertical on desktop) -->
                 <nav class="flex lg:flex-col gap-4 justify-center lg:justify-start">
-                    <button data-tech="launch" class="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border-2 border-white bg-white text-[#0B0D17] text-base md:text-xl lg:text-2xl font-bellefair transition hover:border-white hover:bg-white">
-                        1
-                    </button>
-                    <button data-tech="spaceport" class="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border-2 border-white/25 bg-transparent text-white text-base md:text-xl lg:text-2xl font-bellefair transition hover:border-white">
-                        2
-                    </button>
-                    <button data-tech="capsule" class="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border-2 border-white/25 bg-transparent text-white text-base md:text-xl lg:text-2xl font-bellefair transition hover:border-white">
-                        3
-                    </button>
+                    @foreach($technologies as $index => $tech)
+                        <button data-tech="{{ $tech->id }}" class="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border-2 {{ $index === 0 ? 'border-white bg-white text-[#0B0D17]' : 'border-white/25 bg-transparent text-white' }} text-base md:text-xl lg:text-2xl font-bellefair transition hover:border-white hover:bg-white">
+                            {{ $index + 1 }}
+                        </button>
+                    @endforeach
                 </nav>
 
                 <!-- Technology Info -->
@@ -60,15 +56,12 @@
 
                     <!-- Name -->
                     <h1 id="tech-name" class="text-white text-2xl md:text-4xl lg:text-5xl uppercase font-bellefair">
-                        Launch vehicle
+                        {{ $technologies->first()?->getName() }}
                     </h1>
 
                     <!-- Description -->
                     <p id="tech-description" class="text-[#D0D6F9] text-base md:text-lg leading-relaxed font-barlow">
-                        A launch vehicle or carrier rocket is a rocket-propelled vehicle used to carry a
-                        payload from Earth's surface to space, usually to Earth orbit or beyond. Our
-                        WEB-X carrier rocket is the most powerful in operation. Standing 150 metres tall,
-                        it's quite an awe-inspiring sight on the launch pad!
+                        {{ $technologies->first()?->getDescription() }}
                     </p>
                 </div>
 
@@ -78,14 +71,14 @@
             <div class="lg:col-span-5 flex justify-center items-center order-1 lg:order-2">
                 <!-- Mobile/Tablet: Landscape image -->
                 <img id="tech-image-landscape"
-                     src="{{ asset('assets/technology/image-launch-vehicle-landscape.jpg') }}"
-                     alt="Launch vehicle"
+                     src="{{ asset($technologies->first()?->image_landscape) }}"
+                     alt="{{ $technologies->first()?->getName() }}"
                      class="w-full h-auto lg:hidden">
 
                 <!-- Desktop: Portrait image -->
                 <img id="tech-image-portrait"
-                     src="{{ asset('assets/technology/image-launch-vehicle-portrait.jpg') }}"
-                     alt="Launch vehicle"
+                     src="{{ asset($technologies->first()?->image_portrait) }}"
+                     alt="{{ $technologies->first()?->getName() }}"
                      class="hidden lg:block w-full h-auto">
             </div>
 
@@ -96,10 +89,8 @@
 
 @section('scripts')
     <script>
-        // Injecter les traductions dans JavaScript
-        window.translations = {
-            technologies: @json(__('technology.technologies'))
-        };
+        // Injecter les données de technologies depuis la BDD
+        window.technologiesData = @json($technologies->keyBy('id'));
     </script>
     @vite(['resources/js/technology.js'])
 @endsection

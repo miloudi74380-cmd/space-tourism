@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Admin\CrewController as AdminCrewController;
 use App\Http\Controllers\Admin\PlanetController;
+use App\Http\Controllers\Admin\TechnologyController as AdminTechnologyController;
 use App\Http\Controllers\CrewController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TechnologyController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes - Space Tourism site
@@ -17,9 +19,7 @@ Route::get('/destination', [DestinationController::class, 'index'])->name('desti
 
 Route::get('/crew', [CrewController::class, 'index'])->name('crew');
 
-Route::get('/technology', function () {
-    return view('technology');
-})->name('technology');
+Route::get('/technology', [TechnologyController::class, 'index'])->name('technology');
 
 // Language switcher
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])
@@ -43,4 +43,5 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('planets', PlanetController::class);
     Route::resource('crew', AdminCrewController::class);
+    Route::resource('technologies', AdminTechnologyController::class);
 });

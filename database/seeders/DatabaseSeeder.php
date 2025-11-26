@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PlanetSeeder::class,
             CrewMemberSeeder::class,
+            TechnologySeeder::class,
         ]);
 
         // User::factory(10)->create();
