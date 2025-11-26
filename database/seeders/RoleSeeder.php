@@ -20,6 +20,10 @@ class RoleSeeder extends Seeder
             'planets.create',
             'planets.edit',
             'planets.delete',
+            'crew.view',
+            'crew.create',
+            'crew.edit',
+            'crew.delete',
         ];
 
         foreach ($permissions as $permission) {

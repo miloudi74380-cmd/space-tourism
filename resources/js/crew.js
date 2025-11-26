@@ -1,43 +1,30 @@
-// Données des membres d'équipage (récupérées depuis les traductions Laravel)
+// Données des membres d'équipage (récupérées depuis la base de données)
 const getCrewMembers = () => {
-    const trans = window.translations?.crewMembers || {};
-    return {
-        douglas: {
-            name: trans.douglas?.name || "Douglas Hurley",
-            role: trans.douglas?.role || "Commander",
-            bio: trans.douglas?.bio || "",
-            image: "/assets/crew/image-douglas-hurley.png",
-            imageWebp: "/assets/crew/image-douglas-hurley.webp"
-        },
-        mark: {
-            name: trans.mark?.name || "Mark Shuttleworth",
-            role: trans.mark?.role || "Mission Specialist",
-            bio: trans.mark?.bio || "",
-            image: "/assets/crew/image-mark-shuttleworth.png",
-            imageWebp: "/assets/crew/image-mark-shuttleworth.webp"
-        },
-        victor: {
-            name: trans.victor?.name || "Victor Glover",
-            role: trans.victor?.role || "Pilot",
-            bio: trans.victor?.bio || "",
-            image: "/assets/crew/image-victor-glover.png",
-            imageWebp: "/assets/crew/image-victor-glover.webp"
-        },
-        anousheh: {
-            name: trans.anousheh?.name || "Anousheh Ansari",
-            role: trans.anousheh?.role || "Flight Engineer",
-            bio: trans.anousheh?.bio || "",
-            image: "/assets/crew/image-anousheh-ansari.png",
-            imageWebp: "/assets/crew/image-anousheh-ansari.webp"
-        }
-    };
+    return window.crewData || {};
+};
+
+// Get current locale from HTML lang attribute
+const getLocale = () => {
+    return document.documentElement.lang || 'en';
+};
+
+// Get crew member role in current locale
+const getCrewRole = (crew) => {
+    const locale = getLocale();
+    return crew[`role_${locale}`] || crew.role_en;
+};
+
+// Get crew member bio in current locale
+const getCrewBio = (crew) => {
+    const locale = getLocale();
+    return crew[`bio_${locale}`] || crew.bio_en;
 };
 
 const crewMembers = getCrewMembers();
 
 // Fonction pour changer de membre d'équipage
-function changeCrew(crewKey) {
-    const crew = crewMembers[crewKey];
+function changeCrew(crewId) {
+    const crew = crewMembers[crewId];
 
     if (!crew) return;
 
@@ -51,7 +38,7 @@ function changeCrew(crewKey) {
     // Mettre à jour le rôle
     const crewRole = document.getElementById('crew-role');
     if (crewRole) {
-        crewRole.textContent = crew.role;
+        crewRole.textContent = getCrewRole(crew);
     }
 
     // Mettre à jour le nom
@@ -63,12 +50,12 @@ function changeCrew(crewKey) {
     // Mettre à jour la biographie
     const crewBio = document.getElementById('crew-bio');
     if (crewBio) {
-        crewBio.textContent = crew.bio;
+        crewBio.textContent = getCrewBio(crew);
     }
 
     // Mettre à jour les dots actifs
     document.querySelectorAll('[data-crew]').forEach(dot => {
-        const isActive = dot.dataset.crew === crewKey;
+        const isActive = dot.dataset.crew == crewId;
 
         if (isActive) {
             dot.classList.remove('bg-white/20');
@@ -85,11 +72,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ajouter les événements de clic sur les dots
     document.querySelectorAll('[data-crew]').forEach(dot => {
         dot.addEventListener('click', function() {
-            const crewKey = this.dataset.crew;
-            changeCrew(crewKey);
+            const crewId = this.dataset.crew;
+            changeCrew(crewId);
         });
     });
 
-    // Charger le premier membre d'équipage (Douglas) par défaut
-    changeCrew('douglas');
+    // Charger le premier membre d'équipage par défaut
+    const firstCrewButton = document.querySelector('[data-crew]');
+    if (firstCrewButton) {
+        const firstCrewId = firstCrewButton.dataset.crew;
+        changeCrew(firstCrewId);
+    }
 });

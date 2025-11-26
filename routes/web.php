@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\CrewController as AdminCrewController;
 use App\Http\Controllers\Admin\PlanetController;
+use App\Http\Controllers\CrewController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
@@ -13,9 +15,7 @@ Route::get('/', function () {
 
 Route::get('/destination', [DestinationController::class, 'index'])->name('destination');
 
-Route::get('/crew', function () {
-    return view('crew');
-})->name('crew');
+Route::get('/crew', [CrewController::class, 'index'])->name('crew');
 
 Route::get('/technology', function () {
     return view('technology');
@@ -42,4 +42,5 @@ Route::middleware('auth')->group(function () {
 // Admin routes - Protected by auth and role:admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('planets', PlanetController::class);
+    Route::resource('crew', AdminCrewController::class);
 });

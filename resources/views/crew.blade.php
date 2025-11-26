@@ -40,27 +40,24 @@
 
                 <!-- Role -->
                 <h3 id="crew-role" class="text-white/50 text-base md:text-2xl lg:text-3xl uppercase font-bellefair text-center lg:text-left">
-                    Commander
+                    {{ $crew->first()?->getRole() }}
                 </h3>
 
                 <!-- Name -->
                 <h1 id="crew-name" class="text-white text-2xl md:text-4xl lg:text-5xl uppercase font-bellefair text-center lg:text-left">
-                    Douglas Hurley
+                    {{ $crew->first()?->name }}
                 </h1>
 
                 <!-- Bio -->
                 <p id="crew-bio" class="text-[#D0D6F9] text-base md:text-lg leading-relaxed font-barlow text-center lg:text-left">
-                    Douglas Gerald Hurley is an American engineer, former Marine Corps pilot
-                    and former NASA astronaut. He launched into space for the third time as
-                    commander of Crew Dragon Demo-2.
+                    {{ $crew->first()?->getBio() }}
                 </p>
 
                 <!-- Dots Navigation -->
                 <nav class="flex gap-4 justify-center lg:justify-start pt-8">
-                    <button data-crew="douglas" class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-white transition hover:bg-white/50"></button>
-                    <button data-crew="mark" class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-white/20 transition hover:bg-white/50"></button>
-                    <button data-crew="victor" class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-white/20 transition hover:bg-white/50"></button>
-                    <button data-crew="anousheh" class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-white/20 transition hover:bg-white/50"></button>
+                    @foreach($crew as $index => $member)
+                        <button data-crew="{{ $member->id }}" class="w-3 h-3 md:w-4 md:h-4 rounded-full {{ $index === 0 ? 'bg-white' : 'bg-white/20' }} transition hover:bg-white/50"></button>
+                    @endforeach
                 </nav>
 
             </div>
@@ -68,8 +65,8 @@
             <!-- Right Section - Crew Image -->
             <div class="flex justify-center items-end order-1 lg:order-2 h-64 md:h-96 lg:h-[500px]">
                 <img id="crew-image"
-                     src="{{ asset('assets/crew/image-douglas-hurley.png') }}"
-                     alt="Douglas Hurley"
+                     src="{{ asset($crew->first()?->image) }}"
+                     alt="{{ $crew->first()?->name }}"
                      class="h-full w-auto object-contain">
             </div>
 
@@ -80,10 +77,8 @@
 
 @section('scripts')
     <script>
-        // Injecter les traductions dans JavaScript
-        window.translations = {
-            crewMembers: @json(__('crew.crew_members'))
-        };
+        // Injecter les données d'équipage depuis la BDD
+        window.crewData = @json($crew->keyBy('id'));
     </script>
     @vite(['resources/js/crew.js'])
 @endsection
