@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CrewController as AdminCrewController;
 use App\Http\Controllers\Admin\PlanetController;
 use App\Http\Controllers\Admin\TechnologyController as AdminTechnologyController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CrewController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\LanguageController;
@@ -44,4 +45,5 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('planets', PlanetController::class);
     Route::resource('crew', AdminCrewController::class);
     Route::resource('technologies', AdminTechnologyController::class);
+    Route::resource('users', AdminUserController::class);
 });
