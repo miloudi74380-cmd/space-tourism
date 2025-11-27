@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Technology;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TechnologyController extends Controller
 {
@@ -45,9 +46,21 @@ class TechnologyController extends Controller
             'name_en' => 'required|string|max:255',
             'description_fr' => 'required|string',
             'description_en' => 'required|string',
-            'image_landscape' => 'required|string|max:255',
-            'image_portrait' => 'required|string|max:255',
+            'image_landscape' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image_portrait' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Handle landscape image upload
+        if ($request->hasFile('image_landscape')) {
+            $landscapePath = $request->file('image_landscape')->store('technologies', 'public');
+            $validated['image_landscape'] = '/storage/' . $landscapePath;
+        }
+
+        // Handle portrait image upload
+        if ($request->hasFile('image_portrait')) {
+            $portraitPath = $request->file('image_portrait')->store('technologies', 'public');
+            $validated['image_portrait'] = '/storage/' . $portraitPath;
+        }
 
         Technology::create($validated);
 
@@ -87,9 +100,41 @@ class TechnologyController extends Controller
             'name_en' => 'required|string|max:255',
             'description_fr' => 'required|string',
             'description_en' => 'required|string',
-            'image_landscape' => 'required|string|max:255',
-            'image_portrait' => 'required|string|max:255',
+            'image_landscape' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image_portrait' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Handle landscape image upload if new image provided
+        if ($request->hasFile('image_landscape')) {
+            // Delete old landscape image if it exists in storage
+            if ($technology->image_landscape && str_starts_with($technology->image_landscape, '/storage/')) {
+                $oldLandscapePath = str_replace('/storage/', '', $technology->image_landscape);
+                Storage::disk('public')->delete($oldLandscapePath);
+            }
+
+            // Upload new landscape image
+            $landscapePath = $request->file('image_landscape')->store('technologies', 'public');
+            $validated['image_landscape'] = '/storage/' . $landscapePath;
+        } else {
+            // Keep existing landscape image
+            unset($validated['image_landscape']);
+        }
+
+        // Handle portrait image upload if new image provided
+        if ($request->hasFile('image_portrait')) {
+            // Delete old portrait image if it exists in storage
+            if ($technology->image_portrait && str_starts_with($technology->image_portrait, '/storage/')) {
+                $oldPortraitPath = str_replace('/storage/', '', $technology->image_portrait);
+                Storage::disk('public')->delete($oldPortraitPath);
+            }
+
+            // Upload new portrait image
+            $portraitPath = $request->file('image_portrait')->store('technologies', 'public');
+            $validated['image_portrait'] = '/storage/' . $portraitPath;
+        } else {
+            // Keep existing portrait image
+            unset($validated['image_portrait']);
+        }
 
         $technology->update($validated);
 
@@ -103,6 +148,18 @@ class TechnologyController extends Controller
     public function destroy(Technology $technology)
     {
         $this->authorize('technologies.delete');
+
+        // Delete landscape image if it exists in storage
+        if ($technology->image_landscape && str_starts_with($technology->image_landscape, '/storage/')) {
+            $landscapePath = str_replace('/storage/', '', $technology->image_landscape);
+            Storage::disk('public')->delete($landscapePath);
+        }
+
+        // Delete portrait image if it exists in storage
+        if ($technology->image_portrait && str_starts_with($technology->image_portrait, '/storage/')) {
+            $portraitPath = str_replace('/storage/', '', $technology->image_portrait);
+            Storage::disk('public')->delete($portraitPath);
+        }
 
         $technology->delete();
 

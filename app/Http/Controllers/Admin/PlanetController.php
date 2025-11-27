@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Planet;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PlanetController extends Controller
 {
@@ -42,7 +43,7 @@ class PlanetController extends Controller
         $validated = $request->validate([
             'name_fr' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'image' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'description_fr' => 'required|string',
             'description_en' => 'required|string',
             'distance_fr' => 'required|string|max:255',
@@ -50,6 +51,12 @@ class PlanetController extends Controller
             'travel_fr' => 'required|string|max:255',
             'travel_en' => 'required|string|max:255',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('planets', 'public');
+            $validated['image'] = '/storage/' . $imagePath;
+        }
 
         Planet::create($validated);
 
@@ -87,7 +94,7 @@ class PlanetController extends Controller
         $validated = $request->validate([
             'name_fr' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'image' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'description_fr' => 'required|string',
             'description_en' => 'required|string',
             'distance_fr' => 'required|string|max:255',
@@ -95,6 +102,22 @@ class PlanetController extends Controller
             'travel_fr' => 'required|string|max:255',
             'travel_en' => 'required|string|max:255',
         ]);
+
+        // Handle image upload if new image provided
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists in storage
+            if ($planet->image && str_starts_with($planet->image, '/storage/')) {
+                $oldImagePath = str_replace('/storage/', '', $planet->image);
+                Storage::disk('public')->delete($oldImagePath);
+            }
+
+            // Upload new image
+            $imagePath = $request->file('image')->store('planets', 'public');
+            $validated['image'] = '/storage/' . $imagePath;
+        } else {
+            // Keep existing image
+            unset($validated['image']);
+        }
 
         $planet->update($validated);
 
@@ -108,6 +131,12 @@ class PlanetController extends Controller
     public function destroy(Planet $planet)
     {
         $this->authorize('planets.delete');
+
+        // Delete image if it exists in storage
+        if ($planet->image && str_starts_with($planet->image, '/storage/')) {
+            $imagePath = str_replace('/storage/', '', $planet->image);
+            Storage::disk('public')->delete($imagePath);
+        }
 
         $planet->delete();
 

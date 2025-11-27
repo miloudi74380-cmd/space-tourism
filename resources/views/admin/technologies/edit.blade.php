@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.technologies.update', $technology) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('admin.technologies.update', $technology) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
 
@@ -35,20 +35,36 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="image_landscape" class="block text-sm font-medium text-gray-700">Image Paysage (chemin)</label>
-                                <input type="text" name="image_landscape" id="image_landscape" value="{{ old('image_landscape', $technology->image_landscape) }}" required
-                                    placeholder="/assets/technology/image-nom-landscape.jpg"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('image_landscape') border-red-500 @enderror">
+                                <label for="image_landscape" class="block text-sm font-medium text-gray-700">Image Paysage</label>
+
+                                @if($technology->image_landscape)
+                                    <div class="mt-2 mb-3">
+                                        <p class="text-sm text-gray-600 mb-2">Image actuelle:</p>
+                                        <img src="{{ asset($technology->image_landscape) }}" alt="{{ $technology->name_fr }} - Landscape" class="h-32 w-auto object-cover rounded-lg border-2 border-gray-200">
+                                    </div>
+                                @endif
+
+                                <input type="file" name="image_landscape" id="image_landscape" accept="image/jpeg,image/png,image/jpg"
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 @error('image_landscape') border-red-500 @enderror">
+                                <p class="mt-1 text-xs text-gray-500">Formats acceptés: JPEG, PNG, JPG. Taille max: 2 MB. Laissez vide pour conserver l'image actuelle.</p>
                                 @error('image_landscape')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="image_portrait" class="block text-sm font-medium text-gray-700">Image Portrait (chemin)</label>
-                                <input type="text" name="image_portrait" id="image_portrait" value="{{ old('image_portrait', $technology->image_portrait) }}" required
-                                    placeholder="/assets/technology/image-nom-portrait.jpg"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('image_portrait') border-red-500 @enderror">
+                                <label for="image_portrait" class="block text-sm font-medium text-gray-700">Image Portrait</label>
+
+                                @if($technology->image_portrait)
+                                    <div class="mt-2 mb-3">
+                                        <p class="text-sm text-gray-600 mb-2">Image actuelle:</p>
+                                        <img src="{{ asset($technology->image_portrait) }}" alt="{{ $technology->name_fr }} - Portrait" class="h-32 w-auto object-cover rounded-lg border-2 border-gray-200">
+                                    </div>
+                                @endif
+
+                                <input type="file" name="image_portrait" id="image_portrait" accept="image/jpeg,image/png,image/jpg"
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 @error('image_portrait') border-red-500 @enderror">
+                                <p class="mt-1 text-xs text-gray-500">Formats acceptés: JPEG, PNG, JPG. Taille max: 2 MB. Laissez vide pour conserver l'image actuelle.</p>
                                 @error('image_portrait')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror

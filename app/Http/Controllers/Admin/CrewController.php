@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CrewMember;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CrewController extends Controller
 {
@@ -46,8 +47,14 @@ class CrewController extends Controller
             'role_en' => 'required|string|max:255',
             'bio_fr' => 'required|string',
             'bio_en' => 'required|string',
-            'image' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('crew', 'public');
+            $validated['image'] = '/storage/' . $imagePath;
+        }
 
         CrewMember::create($validated);
 
@@ -88,8 +95,24 @@ class CrewController extends Controller
             'role_en' => 'required|string|max:255',
             'bio_fr' => 'required|string',
             'bio_en' => 'required|string',
-            'image' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Handle image upload if new image provided
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists in storage
+            if ($crew->image && str_starts_with($crew->image, '/storage/')) {
+                $oldImagePath = str_replace('/storage/', '', $crew->image);
+                Storage::disk('public')->delete($oldImagePath);
+            }
+
+            // Upload new image
+            $imagePath = $request->file('image')->store('crew', 'public');
+            $validated['image'] = '/storage/' . $imagePath;
+        } else {
+            // Keep existing image
+            unset($validated['image']);
+        }
 
         $crew->update($validated);
 
@@ -103,6 +126,12 @@ class CrewController extends Controller
     public function destroy(CrewMember $crew)
     {
         $this->authorize('crew.delete');
+
+        // Delete image if it exists in storage
+        if ($crew->image && str_starts_with($crew->image, '/storage/')) {
+            $imagePath = str_replace('/storage/', '', $crew->image);
+            Storage::disk('public')->delete($imagePath);
+        }
 
         $crew->delete();
 

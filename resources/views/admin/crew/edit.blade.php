@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.crew.update', $crew) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('admin.crew.update', $crew) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
 
@@ -43,10 +43,18 @@
                         </div>
 
                         <div>
-                            <label for="image" class="block text-sm font-medium text-gray-700">Image (chemin)</label>
-                            <input type="text" name="image" id="image" value="{{ old('image', $crew->image) }}" required
-                                placeholder="/assets/crew/image-nom.png"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('image') border-red-500 @enderror">
+                            <label for="image" class="block text-sm font-medium text-gray-700">Image du membre d'équipage</label>
+
+                            @if($crew->image)
+                                <div class="mt-2 mb-3">
+                                    <p class="text-sm text-gray-600 mb-2">Image actuelle:</p>
+                                    <img src="{{ asset($crew->image) }}" alt="{{ $crew->name }}" class="h-32 w-32 object-cover rounded-lg border-2 border-gray-200">
+                                </div>
+                            @endif
+
+                            <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/jpg"
+                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 @error('image') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-500">Formats acceptés: JPEG, PNG, JPG. Taille max: 2 MB. Laissez vide pour conserver l'image actuelle.</p>
                             @error('image')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
