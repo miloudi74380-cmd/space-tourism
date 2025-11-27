@@ -14,6 +14,17 @@ class PlanetSeeder extends Seeder
     {
         $planets = [
             [
+                'name_fr' => 'Mercure',
+                'name_en' => 'Mercury',
+                'image' => '/images/planets/mercury.jpg',
+                'description_fr' => 'Première planète du système solaire, Mercure est une petite planète rocheuse très proche du Soleil. Sa surface est criblée d\'impacts et ses températures varient fortement.',
+                'description_en' => 'The first planet of the solar system, Mercury is a small rocky planet very close to the Sun. Its surface is full of craters and it has extreme temperature variations.',
+                'distance_fr' => '91 mil. km',
+                'distance_en' => '91 mil. km',
+                'travel_fr' => '6-7 mois',
+                'travel_en' => '6-7 months',
+            ],
+            [
                 'name_fr' => 'Lune',
                 'name_en' => 'Moon',
                 'image' => '/assets/destination/image-moon.png',
