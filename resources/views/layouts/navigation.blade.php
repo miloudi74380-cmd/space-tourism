@@ -15,6 +15,30 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @can('planets.view')
+                        <x-nav-link :href="route('admin.planets.index')" :active="request()->routeIs('admin.planets.*')">
+                            {{ __('admin.planets') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('crew.view')
+                        <x-nav-link :href="route('admin.crew.index')" :active="request()->routeIs('admin.crew.*')">
+                            {{ __('admin.crew') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('technologies.view')
+                        <x-nav-link :href="route('admin.technologies.index')" :active="request()->routeIs('admin.technologies.*')">
+                            {{ __('admin.technologies') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('users.view')
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                            {{ __('admin.users') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -70,6 +94,30 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @can('planets.view')
+                <x-responsive-nav-link :href="route('admin.planets.index')" :active="request()->routeIs('admin.planets.*')">
+                    {{ __('admin.planets') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('crew.view')
+                <x-responsive-nav-link :href="route('admin.crew.index')" :active="request()->routeIs('admin.crew.*')">
+                    {{ __('admin.crew') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('technologies.view')
+                <x-responsive-nav-link :href="route('admin.technologies.index')" :active="request()->routeIs('admin.technologies.*')">
+                    {{ __('admin.technologies') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('users.view')
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('admin.users') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
